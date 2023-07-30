@@ -59,7 +59,7 @@ const BeerPicker = () => {
                 case 4:
                 case 5:
                 case 6:
-                    setResult("I think you would like an amber beer, have you tried Leffe Abrée?");
+                    setResult("I think you would like an amber beer, have you tried Leffe Ambrée?");
                     break;
                 case 7:
                 case 8:
