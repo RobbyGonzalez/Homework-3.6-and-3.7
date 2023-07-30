@@ -1,8 +1,13 @@
 import React from 'react'
+import { useContext } from 'react'
+import { NameContext } from '../App'
 
-const Profile = () => {
+const Profile = ({ result }) => {
+    let name = useContext(NameContext)
     return (
-        <div>Profile</div>
+        <div>
+            <p>{name}, {result}</p>
+        </div>
     )
 }
 

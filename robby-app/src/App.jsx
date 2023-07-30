@@ -1,5 +1,6 @@
 import Login from "./components/Login";
 import { useState } from "react";
+import { createContext } from "react";
 import BeerPicker from './components/BeerPicker'
 
 //instantiating the date object
@@ -12,7 +13,8 @@ const monthNames = [
 const legalAge = {
   month: monthNames[date.getMonth()],
   day: date.getDate(),
-  year: date.getFullYear() - 21
+  year: date.getFullYear() - 21,
+  name: ""
 }
 
 const years = [];
@@ -20,31 +22,34 @@ for (let i = 1900; i <= date.getFullYear(); i++) {
   years.push(i);
 }
 
+export const NameContext = createContext();
+
 function App() {
   const [inputs, setInputs] = useState(legalAge);
+  // const [name, setName] = useState("")
   const [underAge, setUnderAge] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const err = "I'm sorry, but you cannot access this site at this time."
 
+  //Destructure the inputs object so we can use the values as new variables.
+  const { month, day, year, name } = inputs;
+
   function handleSubmit(e) {
     e.preventDefault();
     setFormSubmitted(true);
 
-    //Destructure the inputs object so we can use the values as new variables.
-    const { month, day, year } = inputs;
-
-    // Create a new Date object for the selected date at midnight
+    // Create a new Date object for the selected date
     const selectedDate = new Date(`${month} ${day}, ${year}`);
-    selectedDate.setHours(0, 0, 0, 0); // Set the time to midnight (00:00:00)
+    const selectedDateMillis = selectedDate.getTime(); // Convert to milliseconds
 
-    // Create a new Date object for the legal age at midnight
+    // Create a new Date object for the legal age
     const legalAgeDate = new Date();
     legalAgeDate.setFullYear(legalAge.year, monthNames.indexOf(legalAge.month), legalAge.day);
-    legalAgeDate.setHours(0, 0, 0, 0); // Set the time to midnight (00:00:00)
+    const legalAgeMillis = legalAgeDate.getTime(); // Convert to milliseconds
 
     // Compare the two dates
-    if (selectedDate >= legalAgeDate) {
+    if (selectedDateMillis >= legalAgeMillis) {
       setUnderAge(false);
     } else {
       setUnderAge(true);
@@ -53,15 +58,17 @@ function App() {
 
   return (
     <div>
-      <Login
-        inputs={inputs}
-        setInputs={setInputs}
-        handleSubmit={handleSubmit}
-        years={years}
-        date={date}
-      />
-      {formSubmitted && (underAge ? <BeerPicker /> : <p>{err}</p>)}
-
+      <NameContext.Provider value={name}>
+        <Login
+          inputs={inputs}
+          setInputs={setInputs}
+          handleSubmit={handleSubmit}
+          years={years}
+        // name={name}
+        // setName={setName}
+        />
+        {formSubmitted && (underAge ? <BeerPicker /> : <p>{err}</p>)}
+      </NameContext.Provider>
     </div>
   );
 }

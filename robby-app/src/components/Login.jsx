@@ -1,6 +1,8 @@
 import React from 'react'
 
-const Login = ({ inputs, setInputs, handleSubmit, years, date }) => {
+//leaving the parameters name and setName, just in case I want to revert back to name state being separate from input state.
+//TODO: can you conditional show days based the month selected?
+const Login = ({ inputs, setInputs, handleSubmit, years, name, setName }) => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -62,7 +64,14 @@ const Login = ({ inputs, setInputs, handleSubmit, years, date }) => {
                         </option>
                     ))}
                 </select>
-                <button type="submit">Submit</button>
+                <br />
+                <label>Please enter your name: </label>
+                <input
+                    value={inputs.name}
+                    onChange={e => setInputs({ ...inputs, name: e.target.value })}
+                    required
+                />
+                < button type="submit" > Submit</button>
             </form>
         </div>
     )
